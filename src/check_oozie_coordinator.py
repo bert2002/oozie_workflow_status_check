@@ -50,7 +50,7 @@ class OozieConnect():
 
     def set_job_uris(self, history_offset=1, history_length=100, status="SUCCEEDED"):
         self.uris["jobs"] = self.uris["base"] + \
-                            "/v2/jobs?jobtype=wf&localtime&offset=" + str(history_offset) + \
+                            "/v2/jobs?jobtype=coord&localtime&offset=" + str(history_offset) + \
                             "&len=" + str(history_length) + \
                             "&filter=status%3" + status
 
@@ -108,19 +108,20 @@ class OozieJobs():
         wf_count = 0
         self.oozie_connection.set_job_uris(offset, self.history_length)
         json_object = self.oozie_connection.connect("jobs")
-        for job in json_object[u'workflows']:
+        #print json_object
+        for job in json_object[u'coordinatorjobs']:
             wf_count += 1
-            if self.is_within_time_range(self.time_range_minutes, job[u'createdTime']) and (job[u'id'] not in wf_ids):
+            if self.is_within_time_range(self.time_range_minutes, job[u'lastAction']) and (job[u'coordJobId'] not in wf_ids):
 
-                wf_ids.append(job[u'id'])
+                wf_ids.append(job[u'coordJobId'])
 
                 wf_job = {
-                            "id"          : job[u'id'],
-                            "appName"     : job[u'appName'],
+                            "id"          : job[u'coordJobId'],
+                            "appName"     : job[u'coordJobName'],
                             "status"      : job[u'status'],
-                            "createdTime" : job[u'createdTime'],
-                            "startTime"   : job[u'startTime'],
-                            "endTime"     : job[u'endTime']}
+                            "createdTime" : job[u'lastAction'],
+                            "startTime"   : job[u'lastAction'],
+                            "endTime"     : job[u'lastAction']}
 
                 self.workflows.append(wf_job)
 

@@ -1,6 +1,6 @@
 ###Hortonworks Data Platform 2.1 Nagios Plugin - Oozie Workflow Status
 
-This plugin will identify and alert the status of Oozie workflows.
+This plugin will identify and alert the status of Oozie workflows and coordinator.
 
 ![Ambari Oozie Nagios Screenshot](/images/ambari-oozie.png "Ambari Oozie Nagios Screenshot")
 
